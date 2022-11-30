@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/ghIssueCLI.iml" filepath="$PROJECT_DIR$/.idea/ghIssueCLI.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Search-GithubIssues.iml" filepath="$PROJECT_DIR$/.idea/Search-GithubIssues.iml" />
     </modules>
   </component>
 </project>

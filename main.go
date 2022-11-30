@@ -1,15 +1,14 @@
 package main
 
 import (
+	"Search-GithubIssues/cmd"
 	"fmt"
-	"ghIssueCLI/cli"
 	"os"
 )
 
 func main() {
-	if err := cli.RootCmd.Execute(); err != nil {
+	if err := cmd.RootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-
 }
