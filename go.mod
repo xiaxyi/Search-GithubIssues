@@ -1,4 +1,4 @@
-module Search-GithubIssues
+module github.com/xiaxyi/Search-GithubIssues
 
 go 1.18
 

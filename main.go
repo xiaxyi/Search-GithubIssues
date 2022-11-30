@@ -1,8 +1,8 @@
 package main
 
 import (
-	"Search-GithubIssues/cmd"
 	"fmt"
+	"github.com/xiaxyi/Search-GithubIssues/cmd"
 	"os"
 )
 
