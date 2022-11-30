@@ -18,5 +18,3 @@ require (
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 )
-
-replace Search-GithubIssues => github.com/xiaxyi/Search-GithubIssues v0.0.0-20221130081059-7b31398df206
