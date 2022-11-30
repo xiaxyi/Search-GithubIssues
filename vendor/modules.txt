@@ -71,3 +71,4 @@ google.golang.org/protobuf/reflect/protoregistry
 google.golang.org/protobuf/runtime/protoiface
 google.golang.org/protobuf/runtime/protoimpl
 google.golang.org/protobuf/types/descriptorpb
+# Search-GithubIssues => github.com/xiaxyi/Search-GithubIssues v0.0.0-20221130081059-7b31398df206
