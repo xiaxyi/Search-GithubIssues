@@ -1,11 +1,11 @@
 package cmd
 
 import (
-	"Search-GithubIssues/helper/model"
-	"Search-GithubIssues/searches"
 	"context"
 	"github.com/google/go-github/v47/github"
 	"github.com/spf13/cobra"
+	"github.com/xiaxyi/Search-GithubIssues/helper/model"
+	"github.com/xiaxyi/Search-GithubIssues/searches"
 	"golang.org/x/oauth2"
 	"net/url"
 	"os"

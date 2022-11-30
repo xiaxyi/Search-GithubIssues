@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"strings"
 
-	"Search-GithubIssues/helper/model"
+	"github.com/xiaxyi/Search-GithubIssues/helper/model"
 
 	"github.com/google/go-github/v47/github"
 )
