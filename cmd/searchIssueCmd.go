@@ -25,7 +25,10 @@ var CmdGetIssueOnTimeRange = &cobra.Command{
 		tokenClient := oauth2.NewClient(ctx, ts)
 		ghClient := github.NewClient(tokenClient)
 		ghClient.BaseURL, _ = url.Parse("https://api.github.com/")
-
+		toFile := false
+		if csvFileLocation != "" {
+			toFile = true
+		}
 		searchConditionOnTimeOnly := model.Conditions{
 			RepoOwner:        repoOwner,
 			RepoName:         repoName,
@@ -39,7 +42,7 @@ var CmdGetIssueOnTimeRange = &cobra.Command{
 		//	return fmt.Errorf("connection to Github repo error: %+v", err)
 		//}
 
-		if err := searches.GetIssueOnCreationTimeRange(ctx, ghClient, searchConditionOnTimeOnly, csvFileLocation, appendOption); err != nil {
+		if err := searches.GetIssueOnCreationTimeRange(ctx, ghClient, searchConditionOnTimeOnly, csvFileLocation, appendOption, toFile); err != nil {
 			return err
 		}
 		return nil

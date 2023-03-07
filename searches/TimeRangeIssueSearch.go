@@ -15,7 +15,7 @@ import (
 	"github.com/google/go-github/v47/github"
 )
 
-func GetIssueOnCreationTimeRange(ctx context.Context, ghClient *github.Client, condition model.Conditions, desFile string, appendOption string) error {
+func GetIssueOnCreationTimeRange(ctx context.Context, ghClient *github.Client, condition model.Conditions, desFile string, appendOption string, toFile bool) error {
 	filter := fmt.Sprintf("repo:%s/%s is:issue created:%s..%s", condition.RepoOwner, condition.RepoName, condition.CreatedTimeStart, condition.CreatedTimeEnd)
 	totalIssueSet, _, err := ghClient.Search.Issues(ctx, filter, &github.SearchOptions{Order: "desc", ListOptions: github.ListOptions{PerPage: 100}})
 	if totalIssueSet == nil {
@@ -39,21 +39,26 @@ func GetIssueOnCreationTimeRange(ctx context.Context, ghClient *github.Client, c
 			if err != nil {
 				return fmt.Errorf("retrieving issues error: %+v", err)
 			}
-			AddIssueToList(issueResult, issueList)
+			AddIssueToList(issueResult, issueList, toFile)
 		}
 	}
 
 	if desFile != "" {
 		ExportResultToLocalCsv(issueList, desFile, appendOption)
+		fmt.Printf("data exported to csv: %s", desFile)
 	}
 	return nil
 }
 
 func GetIssueBasedOnKeyWordListAndTimeRange(ctx context.Context, ghClient *github.Client, condition model.Conditions, keyWordsList []string, desFile string, appendOption string) error {
 	issueList := map[int]interface{}{}
+	toFile := false
+	if desFile != "" {
+		toFile = true
+	}
 	for _, kw := range keyWordsList {
 		filter := fmt.Sprintf("repo:%s/%s is:issue in:title %s created:%s..%s", condition.RepoOwner, condition.RepoName, kw, condition.CreatedTimeStart, condition.CreatedTimeEnd)
-		err := KeyWordAndTimeRangeBasedIssueQueries(ctx, ghClient, filter, issueList)
+		err := KeyWordAndTimeRangeBasedIssueQueries(ctx, ghClient, filter, issueList, toFile)
 		if err != nil {
 			log.Printf("querying issue error:%+v", err)
 			return err
@@ -61,14 +66,15 @@ func GetIssueBasedOnKeyWordListAndTimeRange(ctx context.Context, ghClient *githu
 	}
 	if desFile != "" {
 		ExportResultToLocalCsv(issueList, desFile, appendOption)
+		fmt.Printf("data exported to csv: %s", desFile)
 	}
 	return nil
 }
 
-func KeyWordAndTimeRangeBasedIssueQueries(ctx context.Context, ghClient *github.Client, filter string, issueList map[int]interface{}) error {
+func KeyWordAndTimeRangeBasedIssueQueries(ctx context.Context, ghClient *github.Client, filter string, issueList map[int]interface{}, toFile bool) error {
 	totalIssueSet, _, err := ghClient.Search.Issues(ctx, filter, &github.SearchOptions{Order: "asc", ListOptions: github.ListOptions{PerPage: 100}})
 	if totalIssueSet == nil {
-		return fmt.Errorf("no issue Found by consition: %s, suggested to check your github token", filter)
+		return fmt.Errorf("no issue Found by condition: %s, suggested to check your github token", filter)
 	}
 	var totalIssueCount int
 	if totalIssueSet.Total != nil {
@@ -83,7 +89,7 @@ func KeyWordAndTimeRangeBasedIssueQueries(ctx context.Context, ghClient *github.
 			if err != nil {
 				return fmt.Errorf("retrieving issues error: %+v", err)
 			}
-			AddIssueToList(issueResult, issueList)
+			AddIssueToList(issueResult, issueList, toFile)
 		}
 	}
 	if err != nil {
@@ -93,7 +99,7 @@ func KeyWordAndTimeRangeBasedIssueQueries(ctx context.Context, ghClient *github.
 	return nil
 }
 
-func AddIssueToList(ghResult *github.IssuesSearchResult, issueList map[int]interface{}) {
+func AddIssueToList(ghResult *github.IssuesSearchResult, issueList map[int]interface{}, toFile bool) {
 	var issueNum int
 
 	for _, issue := range ghResult.Issues {
@@ -165,7 +171,9 @@ func AddIssueToList(ghResult *github.IssuesSearchResult, issueList map[int]inter
 		dataInBuffer = append(dataInBuffer, issueType)
 		dataInBuffer = append(dataInBuffer, item["serviceLabel"].(string))
 		dataInBuffer = append(dataInBuffer, item["labeledBug"].(string))
-		fmt.Println(dataInBuffer)
+		if !toFile {
+			fmt.Println(dataInBuffer)
+		}
 		issueList[issueNum] = dataInBuffer
 	}
 }
